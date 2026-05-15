@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Gastos · CajaRápida</title>
+<meta name="theme-color" content="#f87171">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gastos CR">
+<script>
+(function(){
+  var m={name:"Gastos CajaRápida",short_name:"Gastos CR",start_url:".",display:"standalone",
+    orientation:"portrait-primary",background_color:"#080a0f",theme_color:"#f87171",
+    icons:[{src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="90" fill="#0d0f12"/><rect x="100" y="155" width="312" height="202" rx="20" fill="#f87171"/><rect x="120" y="175" width="272" height="162" rx="12" fill="#0d0f12"/><text x="256" y="280" text-anchor="middle" font-size="100" fill="#f87171">↓</text></svg>'),sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
+  var b=new Blob([JSON.stringify(m)],{type:'application/manifest+json'});
+  var l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);
+  document.head.appendChild(l);
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080a0f;--surface:#13171f;--surface2:#1a1f2a;
+  --border:#232838;--text:#e8edf8;--muted:#4a5268;--muted2:#6b7590;
+  --red:#f87171;--red-dim:rgba(248,113,113,0.08);
+  --green:#00e5a0;--amber:#fbbf24;--blue:#4f9eff;--purple:#a78bfa;
+  --radius:14px;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.2;pointer-events:none;z-index:0;}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:rgba(8,10,15,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:1.1rem;font-weight:800;letter-spacing:-0.3px;}
+.logo span{color:var(--red);}
+.hdate{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--muted);}
+
+/* MAIN */
+.main{position:relative;z-index:1;padding:16px;max-width:480px;margin:0 auto;padding-bottom:50px;}
+
+/* RESUMEN TOP */
+.resumen-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.res-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 10px;text-align:center;position:relative;overflow:hidden;}
+.res-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--box-color,var(--red));}
+.res-val{font-family:'JetBrains Mono',monospace;font-size:0.95rem;font-weight:500;color:var(--box-color,var(--red));}
+.res-lbl{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted2);margin-top:4px;}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.card-title{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:14px;}
+
+/* FORM */
+label{display:block;font-size:0.72rem;font-weight:700;color:var(--muted2);margin-bottom:5px;margin-top:12px;letter-spacing:.04em;text-transform:uppercase;}
+label:first-child{margin-top:0;}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:16px;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--red);background:#1a1520;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%234a5268' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+textarea{resize:none;min-height:70px;font-size:15px;}
+
+/* MONTO */
+.monto-wrap{position:relative;}
+.monto-prefix{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--muted2);pointer-events:none;}
+.monto-wrap input{padding-left:36px;}
+
+/* BTNS */
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.92rem;font-weight:800;cursor:pointer;transition:all .15s;margin-bottom:8px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:48px;}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--red);color:#fff;}
+.btn-secondary{background:var(--surface2);border:1.5px solid var(--border);color:var(--text);}
+
+/* LISTA GASTOS */
+.gasto-item{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border);}
+.gasto-item:last-child{border-bottom:none;padding-bottom:0;}
+.gasto-left{flex:1;}
+.gasto-desc{font-size:0.84rem;font-weight:700;margin-bottom:3px;}
+.gasto-meta{font-size:0.7rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;}
+.gasto-monto{font-family:'JetBrains Mono',monospace;font-size:0.92rem;font-weight:500;color:var(--red);white-space:nowrap;margin-left:10px;}
+.tag-cat{display:inline-block;padding:2px 8px;border-radius:6px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-right:5px;}
+.cat-personal{background:rgba(167,139,250,0.12);color:var(--purple);}
+.cat-mercaderia{background:rgba(79,158,255,0.12);color:var(--blue);}
+.cat-alquiler{background:rgba(251,191,36,0.12);color:var(--amber);}
+.cat-otros{background:rgba(100,116,139,0.12);color:var(--muted2);}
+
+/* SYNC */
+.sync-badge{display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;padding:4px 10px;border-radius:99px;background:var(--surface2);color:var(--muted);transition:all .3s;}
+.sync-badge.ok{background:rgba(0,229,160,0.1);color:var(--green);}
+.sync-badge.err{background:rgba(248,113,113,0.1);color:var(--red);}
+.sync-badge.sending{background:rgba(251,191,36,0.1);color:var(--amber);}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* TABS PERIODO */
+.period-tabs{display:flex;gap:6px;margin-bottom:14px;}
+.ptab{flex:1;padding:8px 4px;border:1.5px solid var(--border);border-radius:8px;background:none;color:var(--muted2);font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.ptab.active{border-color:var(--red);color:var(--red);background:var(--red-dim);}
+
+/* EMPTY */
+.empty{text-align:center;padding:30px 20px;color:var(--muted);}
+.empty .ico{font-size:2rem;margin-bottom:8px;}
+.empty p{font-size:0.82rem;}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:99px;font-size:0.82rem;font-weight:700;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* SETUP */
+.setup-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:300;align-items:center;justify-content:center;padding:20px;}
+.setup-ov.open{display:flex;}
+.setup-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px 24px;width:100%;max-width:360px;text-align:center;}
+.setup-box h2{font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.setup-box p{font-size:0.82rem;color:var(--muted2);margin-bottom:20px;line-height:1.5;}
+.setup-box input{margin-bottom:14px;text-align:center;}
+.btn-setup{width:100%;padding:14px;border:none;border-radius:10px;background:var(--red);color:#fff;font-family:'Syne',sans-serif;font-size:0.92rem;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+</style>
+</head>
+<body>
+
+<!-- SETUP PIN DUEÑO -->
+<div class="setup-ov" id="setup-ov">
+  <div class="setup-box">
+    <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
+    <h2>Acceso del Dueño</h2>
+    <p>Esta app es solo para el dueño del negocio. Crea un PIN de 4 dígitos para protegerla.</p>
+    <input type="password" id="setup-pin" placeholder="PIN de 4 dígitos" maxlength="4" inputmode="numeric"
+           onkeydown="if(event.key==='Enter')guardarPin()">
+    <button class="btn-setup" onclick="guardarPin()">Guardar PIN →</button>
+  </div>
+</div>
+
+<!-- LOGIN PIN -->
+<div class="setup-ov" id="login-ov">
+  <div class="setup-box">
+    <div style="font-size:2rem;margin-bottom:12px;">🔒</div>
+    <h2>Ingresa tu PIN</h2>
+    <p>Solo el dueño puede registrar gastos.</p>
+    <input type="password" id="login-pin" placeholder="PIN de 4 dígitos" maxlength="4" inputmode="numeric"
+           onkeydown="if(event.key==='Enter')verificarPin()">
+    <button class="btn-setup" onclick="verificarPin()">Entrar →</button>
+    <div id="pin-error" style="color:var(--red);font-size:0.78rem;margin-top:10px;display:none;">PIN incorrecto</div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="logo">Gastos <span>CR</span></div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="sync-badge" id="sync-badge"><div class="sync-dot"></div><span id="sync-txt">Listo</span></div>
+    <div class="hdate" id="hdate"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- RESUMEN -->
+  <div class="resumen-grid">
+    <div class="res-box" style="--box-color:var(--red)">
+      <div class="res-val" id="res-hoy">S/0</div>
+      <div class="res-lbl">Hoy</div>
+    </div>
+    <div class="res-box" style="--box-color:var(--amber)">
+      <div class="res-val" id="res-semana">S/0</div>
+      <div class="res-lbl">Semana</div>
+    </div>
+    <div class="res-box" style="--box-color:var(--purple)">
+      <div class="res-val" id="res-mes">S/0</div>
+      <div class="res-lbl">Mes</div>
+    </div>
+  </div>
+
+  <!-- FORMULARIO -->
+  <div class="card">
+    <div class="card-title">Registrar Gasto</div>
+
+    <label>Categoría</label>
+    <select id="gasto-cat">
+      <option value="Personal">👥 Personal (sueldos / comisiones)</option>
+      <option value="Mercadería">📦 Mercadería / inventario</option>
+      <option value="Alquiler">🏠 Alquiler</option>
+      <option value="Servicios">💡 Servicios (luz, agua, internet)</option>
+      <option value="Transporte">🚗 Transporte / delivery</option>
+      <option value="Otros">📋 Otros</option>
+    </select>
+
+    <label>Descripción</label>
+    <input type="text" id="gasto-desc" placeholder="Ej: Sueldo María - mayo, Compra cases iPhone...">
+
+    <label>Monto</label>
+    <div class="monto-wrap">
+      <span class="monto-prefix">S/</span>
+      <input type="number" id="gasto-monto" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+    </div>
+
+    <label>Fecha</label>
+    <input type="date" id="gasto-fecha">
+
+    <label>Comprobante</label>
+    <select id="gasto-comprobante">
+      <option value="Sin comprobante">Sin comprobante</option>
+      <option value="Boleta">Boleta</option>
+      <option value="Factura">Factura</option>
+      <option value="Recibo">Recibo</option>
+    </select>
+
+    <label>Nota (opcional)</label>
+    <textarea id="gasto-nota" placeholder="Observaciones adicionales..."></textarea>
+
+    <div style="margin-top:16px;">
+      <button type="button" class="btn btn-primary" onclick="registrarGasto()">↓ Registrar Gasto</button>
+      <button type="button" class="btn btn-secondary" onclick="limpiarGasto()">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- LISTA GASTOS -->
+  <div class="card">
+    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Gastos registrados</span>
+    </div>
+    <div class="period-tabs">
+      <button type="button" class="ptab active" onclick="setPeriodo('hoy',this)">Hoy</button>
+      <button type="button" class="ptab" onclick="setPeriodo('semana',this)">Semana</button>
+      <button type="button" class="ptab" onclick="setPeriodo('mes',this)">Mes</button>
+      <button type="button" class="ptab" onclick="setPeriodo('todo',this)">Todo</button>
+    </div>
+    <div id="lista-gastos"></div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwir_8b3mwA547UvidOEDo7AKicyhCHet8fjch7lb7VP1FQ9O8s20pbWimW3hVxzurS/exec';
+var periodoActual = 'hoy';
+var gastosLocal   = JSON.parse(localStorage.getItem('gastos_cr') || '[]');
+
+// ── INIT ──────────────────────────────────────────────
+window.onload = function() {
+  var hoy = getHoy();
+  document.getElementById('hdate').textContent  = fmtFecha(hoy);
+  document.getElementById('gasto-fecha').value  = hoy;
+  checkAcceso();
+  actualizarResumen();
+  renderLista();
+};
+
+// ── ACCESO PIN ────────────────────────────────────────
+function checkAcceso() {
+  var pin = localStorage.getItem('gastos_pin');
+  if (!pin) {
+    document.getElementById('setup-ov').classList.add('open');
+  } else if (!sessionStorage.getItem('gastos_auth')) {
+    document.getElementById('login-ov').classList.add('open');
+  }
+}
+function guardarPin() {
+  var p = document.getElementById('setup-pin').value.trim();
+  if (p.length < 4) { toast('⚠ El PIN debe tener 4 dígitos'); return; }
+  localStorage.setItem('gastos_pin', p);
+  sessionStorage.setItem('gastos_auth', '1');
+  document.getElementById('setup-ov').classList.remove('open');
+  toast('✅ PIN guardado');
+}
+function verificarPin() {
+  var p    = document.getElementById('login-pin').value.trim();
+  var real = localStorage.getItem('gastos_pin');
+  if (p === real) {
+    sessionStorage.setItem('gastos_auth', '1');
+    document.getElementById('login-ov').classList.remove('open');
+    document.getElementById('pin-error').style.display = 'none';
+  } else {
+    document.getElementById('pin-error').style.display = 'block';
+    document.getElementById('login-pin').value = '';
+  }
+}
+
+// ── REGISTRAR GASTO ───────────────────────────────────
+function registrarGasto() {
+  var cat    = document.getElementById('gasto-cat').value;
+  var desc   = document.getElementById('gasto-desc').value.trim();
+  var monto  = parseFloat(document.getElementById('gasto-monto').value) || 0;
+  var fecha  = document.getElementById('gasto-fecha').value;
+  var comp   = document.getElementById('gasto-comprobante').value;
+  var nota   = document.getElementById('gasto-nota').value.trim();
+
+  if (!desc)       { toast('⚠ Escribe una descripción'); return; }
+  if (monto <= 0)  { toast('⚠ Ingresa un monto válido'); return; }
+  if (!fecha)      { toast('⚠ Selecciona la fecha'); return; }
+
+  var btn = document.querySelector('.btn-primary');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+
+  var gasto = {
+    id:          Date.now(),
+    fecha:       fecha,
+    hora:        getHora(),
+    categoria:   cat,
+    descripcion: desc,
+    monto:       monto,
+    comprobante: comp,
+    nota:        nota,
+    tipo:        'EGRESO'
+  };
+
+  // Guardar local
+  gastosLocal.push(gasto);
+  localStorage.setItem('gastos_cr', JSON.stringify(gastosLocal));
+  actualizarResumen();
+  renderLista();
+
+  // Enviar a Sheets
+  setSyncStatus('sending', '⟳ Enviando...');
+  fetch(SHEETS_URL + '?sheet=gastos', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gasto)
+  }).then(function() {
+    setSyncStatus('ok', '✓ Sincronizado');
+    toast('✅ Gasto registrado · S/' + monto.toFixed(2));
+  }).catch(function() {
+    setSyncStatus('err', '⚠ Sin conexión');
+    toast('⚠ Guardado local · Sin internet');
+  }).finally(function() {
+    btn.disabled = false;
+    btn.textContent = '↓ Registrar Gasto';
+    limpiarGasto();
+  });
+}
+
+// ── LIMPIAR ───────────────────────────────────────────
+function limpiarGasto() {
+  document.getElementById('gasto-cat').value         = 'Personal';
+  document.getElementById('gasto-desc').value        = '';
+  document.getElementById('gasto-monto').value       = '';
+  document.getElementById('gasto-fecha').value       = getHoy();
+  document.getElementById('gasto-comprobante').value = 'Sin comprobante';
+  document.getElementById('gasto-nota').value        = '';
+}
+
+// ── RESUMEN ───────────────────────────────────────────
+function actualizarResumen() {
+  var hoy    = getHoy();
+  var lunes  = getLunes();
+  var mes    = hoy.slice(0, 7);
+
+  var gh = gastosLocal.filter(function(g){ return g.fecha === hoy; })
+             .reduce(function(s,g){ return s+g.monto; }, 0);
+  var gs = gastosLocal.filter(function(g){ return g.fecha >= lunes; })
+             .reduce(function(s,g){ return s+g.monto; }, 0);
+  var gm = gastosLocal.filter(function(g){ return g.fecha.startsWith(mes); })
+             .reduce(function(s,g){ return s+g.monto; }, 0);
+
+  document.getElementById('res-hoy').textContent    = 'S/'+fmt(gh);
+  document.getElementById('res-semana').textContent = 'S/'+fmt(gs);
+  document.getElementById('res-mes').textContent    = 'S/'+fmt(gm);
+}
+
+// ── LISTA ─────────────────────────────────────────────
+function setPeriodo(p, btn) {
+  periodoActual = p;
+  document.querySelectorAll('.ptab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderLista();
+}
+
+function renderLista() {
+  var hoy   = getHoy();
+  var lunes = getLunes();
+  var mes   = hoy.slice(0, 7);
+
+  var lista = gastosLocal.filter(function(g) {
+    if (periodoActual === 'hoy')    return g.fecha === hoy;
+    if (periodoActual === 'semana') return g.fecha >= lunes;
+    if (periodoActual === 'mes')    return g.fecha.startsWith(mes);
+    return true;
+  }).sort(function(a,b){ return b.id - a.id; });
+
+  var el = document.getElementById('lista-gastos');
+  if (!lista.length) {
+    el.innerHTML = '<div class="empty"><div class="ico">📭</div><p>Sin gastos en este período</p></div>';
+    return;
+  }
+
+  var catClass = { 'Personal':'cat-personal','Mercadería':'cat-mercaderia','Alquiler':'cat-alquiler' };
+  el.innerHTML = lista.map(function(g) {
+    var cls = catClass[g.categoria] || 'cat-otros';
+    return '<div class="gasto-item">' +
+      '<div class="gasto-left">' +
+        '<div class="gasto-desc">' +
+          '<span class="tag-cat '+cls+'">'+g.categoria+'</span>'+g.descripcion+
+        '</div>' +
+        '<div class="gasto-meta">'+g.fecha+' '+g.hora+' · '+g.comprobante+'</div>' +
+        (g.nota ? '<div class="gasto-meta" style="color:var(--muted);margin-top:2px;">'+g.nota+'</div>' : '') +
+      '</div>' +
+      '<div class="gasto-monto">-S/'+fmt(g.monto)+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── SYNC BADGE ────────────────────────────────────────
+function setSyncStatus(type, text) {
+  var b = document.getElementById('sync-badge');
+  var s = document.getElementById('sync-txt');
+  b.className = 'sync-badge ' + type;
+  s.textContent = text;
+  if (type === 'ok') setTimeout(function(){ b.className='sync-badge'; s.textContent='Listo'; }, 3000);
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function getHoy() {
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function getLunes() {
+  var d=new Date(); var day=d.getDay()||7; d.setDate(d.getDate()-day+1);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function getHora() {
+  return new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+}
+function fmtFecha(f) {
+  return new Date(f+'T12:00:00').toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'});
+}
+function fmt(n) {
+  return parseFloat(n||0).toFixed(2);
+}
+function toast(msg) {
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); },2800);
+}
+</script>
+</body>
+</html>
