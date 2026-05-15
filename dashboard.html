@@ -237,8 +237,10 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <script>
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwir_8b3mwA547UvidOEDo7AKicyhCHet8fjch7lb7VP1FQ9O8s20pbWimW3hVxzurS/exec';
 
-var todosLosDatos = [];
+var todosLosDatos  = [];
+var todosGastos    = [];
 var datosFiltrados = [];
+var gastosFiltrados = [];
 
 // ── INIT ──────────────────────────────────────────────
 window.onload = function() {
@@ -259,28 +261,25 @@ function cargarDatos() {
   ico.style.animation = 'spin .8s linear infinite';
   document.getElementById('last-update').textContent = 'Actualizando...';
 
-  fetch(SHEETS_URL + '?t=' + Date.now())
-    .then(function(r) {
-      var ct = r.headers.get('content-type') || '';
-      if (!ct.includes('json')) {
-        throw new Error('El servidor no devolvió JSON. Verifica que el Apps Script esté publicado correctamente como aplicación web con acceso "Cualquier persona".');
-      }
-      return r.json();
-    })
-    .then(function(data) {
-      todosLosDatos = data.ventas || [];
-      poblarFiltroVendedoras();
-      aplicarFiltros();
-      var ahora = new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
-      document.getElementById('last-update').textContent = 'Actualizado ' + ahora;
-    })
-    .catch(function(err) {
-      mostrarError(err.message || 'Sin conexión o error en el servidor');
-    })
-    .finally(function() {
-      ico.style.animation = '';
-      ico.textContent = '↻';
-    });
+  var urlVentas = SHEETS_URL + '?t=' + Date.now();
+  var urlGastos = SHEETS_URL + '?sheet=gastos&t=' + Date.now();
+
+  Promise.all([
+    fetch(urlVentas).then(function(r){ return r.json(); }),
+    fetch(urlGastos).then(function(r){ return r.json(); })
+  ]).then(function(results) {
+    todosLosDatos = results[0].ventas || [];
+    todosGastos   = results[1].gastos || [];
+    poblarFiltroVendedoras();
+    aplicarFiltros();
+    var ahora = new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('last-update').textContent = 'Actualizado ' + ahora;
+  }).catch(function(err) {
+    mostrarError(err.message || 'Sin conexión o error en el servidor');
+  }).finally(function() {
+    ico.style.animation = '';
+    ico.textContent = '↻';
+  });
 }
 
 function poblarFiltroVendedoras() {
@@ -315,6 +314,10 @@ function aplicarFiltros() {
     if (vendedora && v.seller !== vendedora) return false;
     if (pago && v.pago !== pago) return false;
     return true;
+  });
+
+  gastosFiltrados = todosGastos.filter(function(g) {
+    return g.fecha >= desde && g.fecha <= hasta;
   });
 
   renderDashboard();
@@ -425,15 +428,63 @@ function renderDashboard() {
   var html = '';
 
   // ── KPIs ─────────────────────────────────────────────
+  // Calcular gastos
+  var totalGastos   = gastosFiltrados.reduce(function(s,g){ return s+g.monto; }, 0);
+  var gastoPersonal = gastosFiltrados.filter(function(g){ return g.categoria==='Personal'; }).reduce(function(s,g){ return s+g.monto; }, 0);
+  var gastoMercad   = gastosFiltrados.filter(function(g){ return g.categoria==='Mercadería'; }).reduce(function(s,g){ return s+g.monto; }, 0);
+  var gastoAlquiler = gastosFiltrados.filter(function(g){ return g.categoria==='Alquiler'; }).reduce(function(s,g){ return s+g.monto; }, 0);
+  var gastoOtros    = totalGastos - gastoPersonal - gastoMercad - gastoAlquiler;
+  var balance       = totalMonto - totalGastos;
+  var balanceColor  = balance >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // BALANCE BOX
+  html += '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">';
+  html += '<div>';
+  html += '<div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:6px;">Balance del Período</div>';
+  html += '<div style="font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:1px;color:'+balanceColor+';">'+(balance>=0?'+':'')+' S/'+fmt(balance)+'</div>';
+  html += '</div>';
+  html += '<div style="text-align:right;">';
+  html += '<div style="font-size:.75rem;color:var(--green);font-family:'DM Mono',monospace;">↑ Ingresos S/'+fmt(totalMonto)+'</div>';
+  html += '<div style="font-size:.75rem;color:var(--red);font-family:'DM Mono',monospace;margin-top:4px;">↓ Gastos S/'+fmt(totalGastos)+'</div>';
+  html += '</div>';
+  html += '</div>';
+
   html += '<div class="kpi-grid">';
   html += kpiCard('Total Vendido', 'S/'+fmt(totalMonto), totalVentas+' ventas', 'var(--green)');
   html += kpiCard('Ticket Promedio', 'S/'+fmt(ticketProm), 'por venta', 'var(--blue)');
   html += kpiCard('Items Vendidos', totalItems, 'unidades totales', 'var(--purple)');
-  html += kpiCard('Boletas', totalBoletas, Math.round(totalBoletas/totalVentas*100||0)+'% del total', 'var(--green)');
-  html += kpiCard('Facturas', totalFacturas, Math.round(totalFacturas/totalVentas*100||0)+'% del total', 'var(--blue)');
-  html += kpiCard('Total Puntos', 'S/'+fmt(totalPuntos), countPuntos+' venta(s) con punto', 'var(--red)');
-  html += kpiCard('Venta Propia', 'S/'+fmt(totalPropio), countPropio+' venta(s) sin punto', 'var(--green)');
+  html += kpiCard('Total Gastos', 'S/'+fmt(totalGastos), gastosFiltrados.length+' egreso(s)', 'var(--red)');
+  html += kpiCard('Total Puntos', 'S/'+fmt(totalPuntos), countPuntos+' venta(s)', 'var(--amber)');
+  html += kpiCard('Venta Propia', 'S/'+fmt(totalPropio), countPropio+' venta(s)', 'var(--green)');
   html += '</div>';
+
+  // DESGLOSE GASTOS
+  if (gastosFiltrados.length > 0) {
+    html += '<div class="section"><div class="section-header"><span class="section-title">Desglose de Gastos</span></div>';
+    html += '<div class="grid-2">';
+    // Barras categorías
+    html += '<div class="card"><div class="card-title">Por Categoría</div>';
+    var maxG = Math.max(gastoPersonal,gastoMercad,gastoAlquiler,gastoOtros)||1;
+    var gcats = [['Personal',gastoPersonal,'var(--purple)'],['Mercadería',gastoMercad,'var(--blue)'],['Alquiler',gastoAlquiler,'var(--amber)'],['Otros',gastoOtros,'var(--muted2)']];
+    gcats.filter(function(c){return c[1]>0;}).forEach(function(c){
+      html += '<div class="bar-item"><span class="bar-label">'+c[0]+'</span>';
+      html += '<div class="bar-track"><div class="bar-fill" style="width:'+Math.round(c[1]/maxG*100)+'%;background:'+c[2]+';"></div></div>';
+      html += '<span class="bar-val">S/'+fmt(c[1])+'</span></div>';
+    });
+    html += '</div>';
+    // Últimos gastos
+    html += '<div class="card"><div class="card-title">Últimos gastos</div>';
+    var ultGastos = [...gastosFiltrados].sort(function(a,b){ return b.fecha>a.fecha?1:-1; }).slice(0,6);
+    ultGastos.forEach(function(g){
+      html += '<div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">';
+      html += '<div style="font-size:.76rem;"><div style="font-weight:600;">'+g.descripcion+'</div>';
+      html += '<div style="color:var(--muted2);font-size:.68rem;font-family:'DM Mono',monospace;">'+g.fecha+' · '+g.categoria+'</div></div>';
+      html += '<span style="font-family:'DM Mono',monospace;color:var(--red);font-size:.82rem;font-weight:600;">-S/'+fmt(g.monto)+'</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '</div></div>';
+  }
 
   // ── VENTAS POR DÍA ────────────────────────────────────
   if (diasSorted.length > 1) {
@@ -603,3 +654,4 @@ function fmtFechaCorta(f) {
 </script>
 </body>
 </html>
+
