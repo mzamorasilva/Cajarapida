@@ -35,7 +35,7 @@
   --accent:#00e5a0;--accent-dim:#00b37a;--danger:#ff4757;
   --warn:#ffa502;--radius:14px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:Syne,sans-serif;overflow-x:hidden;}
 
 /* HEADER */
 .header{
@@ -47,9 +47,32 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
 .logo{font-size:1.2rem;font-weight:800;letter-spacing:-0.5px;}
 .logo span{color:var(--accent);}
 .header-right{display:flex;align-items:center;gap:10px;}
+.vf-tab{
+  padding:5px 12px;border:1.5px solid var(--border);border-radius:99px;
+  background:none;color:var(--muted2);font-family:Syne,sans-serif;
+  font-size:0.7rem;font-weight:700;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:all .15s;
+}
+.vf-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,0.08);}
+.venta-row{border-bottom:1px solid var(--border);padding:10px 0;cursor:pointer;}
+.venta-row:last-child{border-bottom:none;padding-bottom:0;}
+.venta-row-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.venta-row-num{font-family:JetBrains Mono,monospace;font-size:0.68rem;color:var(--muted);margin-bottom:3px;}
+.venta-row-cliente{font-size:0.82rem;font-weight:700;}
+.venta-row-monto{font-family:JetBrains Mono,monospace;font-size:0.95rem;font-weight:600;color:var(--accent);white-space:nowrap;margin-left:8px;}
+.venta-row-productos{font-size:0.72rem;color:var(--muted2);margin-top:4px;line-height:1.5;}
+.venta-row-detalle{display:none;background:var(--surface2);border-radius:8px;padding:10px 12px;margin-top:8px;}
+.venta-row-detalle.open{display:block;}
+.det-row{display:flex;justify-content:space-between;padding:4px 0;font-size:0.75rem;border-bottom:1px solid var(--border);}
+.det-row:last-child{border-bottom:none;}
+.det-prod{flex:1;color:var(--text);}
+.det-num{font-family:JetBrains Mono,monospace;color:var(--muted2);font-size:0.7rem;margin:0 8px;}
+.det-sub{font-family:JetBrains Mono,monospace;color:var(--accent);font-size:0.75rem;}
+.pending-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block;margin-left:5px;vertical-align:middle;}
 .sync-badge{
   display:flex;align-items:center;gap:5px;
-  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  font-family:JetBrains Mono,monospace;font-size:0.7rem;
   padding:4px 10px;border-radius:99px;font-weight:500;
   background:var(--surface2);color:var(--muted);
   transition:all .3s;
@@ -72,11 +95,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',
   font-size:0.85rem;font-weight:800;
 }
 .seller-name{font-size:0.85rem;font-weight:700;}
-.seller-sub{font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.seller-sub{font-size:0.7rem;color:var(--muted);font-family:JetBrains Mono,monospace;}
 .btn-change{
   font-size:0.7rem;font-weight:700;color:var(--muted);
   background:none;border:1px solid var(--border);border-radius:6px;
-  padding:4px 10px;cursor:pointer;font-family:'Syne',sans-serif;
+  padding:4px 10px;cursor:pointer;font-family:Syne,sans-serif;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 
@@ -94,7 +117,7 @@ input,select,textarea{
   width:100%;padding:11px 14px;
   background:var(--surface2);border:1.5px solid var(--border);
   border-radius:10px;color:var(--text);
-  font-family:'JetBrains Mono',monospace;font-size:16px;
+  font-family:JetBrains Mono,monospace;font-size:16px;
   outline:none;transition:border-color .2s;
   -webkit-appearance:none;appearance:none;
 }
@@ -110,15 +133,15 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   margin-bottom:14px;
 }
 .total-label{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
-.total-amount{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:500;color:var(--accent);letter-spacing:-1px;}
-.total-items{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--muted);margin-top:2px;}
+.total-amount{font-family:JetBrains Mono,monospace;font-size:2rem;font-weight:500;color:var(--accent);letter-spacing:-1px;}
+.total-items{font-family:JetBrains Mono,monospace;font-size:0.75rem;color:var(--muted);margin-top:2px;}
 
 /* PAGO */
 .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .pay-btn{
   padding:12px 8px;border:1.5px solid var(--border);border-radius:10px;
   background:var(--surface2);color:var(--muted);
-  font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;
+  font-family:Syne,sans-serif;font-size:0.78rem;font-weight:700;
   cursor:pointer;transition:all .15s;text-align:center;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   min-height:48px;letter-spacing:0.03em;
@@ -127,10 +150,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .pay-btn:active{transform:scale(0.97);}
 
 /* BTN REGISTRAR */
+.btn-wa{background:#25d366;color:#fff;}
 .btn-register{
   width:100%;padding:16px;border:none;border-radius:12px;
   background:var(--accent);color:#0d0f12;
-  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  font-family:Syne,sans-serif;font-size:1rem;font-weight:800;
   letter-spacing:0.04em;cursor:pointer;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   transition:all .15s;position:relative;overflow:hidden;
@@ -144,9 +168,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.ventas-hoy-num{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--accent);}
+.ventas-hoy-num{font-family:JetBrains Mono,monospace;font-size:1.6rem;font-weight:500;color:var(--accent);}
 .ventas-hoy-label{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
-.ventas-hoy-total{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--text);}
+.ventas-hoy-total{font-family:JetBrains Mono,monospace;font-size:0.9rem;color:var(--text);}
 
 /* ÚLTIMAS VENTAS */
 .sale-item{
@@ -155,8 +179,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 }
 .sale-item:last-child{border-bottom:none;padding-bottom:0;}
 .sale-desc{font-size:0.82rem;font-weight:700;margin-bottom:3px;}
-.sale-meta{font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-.sale-amount{font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:500;color:var(--accent);white-space:nowrap;margin-left:10px;}
+.sale-meta{font-size:0.7rem;color:var(--muted);font-family:JetBrains Mono,monospace;}
+.sale-amount{font-family:JetBrains Mono,monospace;font-size:0.9rem;font-weight:500;color:var(--accent);white-space:nowrap;margin-left:10px;}
 .tag{display:inline-block;padding:2px 7px;border-radius:99px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-left:5px;}
 .tag-ef{background:rgba(0,229,160,0.12);color:var(--accent);}
 .tag-tj{background:rgba(0,153,255,0.12);color:#4da6ff;}
@@ -181,7 +205,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .btn-setup{
   width:100%;padding:14px;border:none;border-radius:10px;
   background:var(--accent);color:#0d0f12;
-  font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;
+  font-family:Syne,sans-serif;font-size:0.95rem;font-weight:800;
   cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 
@@ -270,6 +294,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div class="sync-dot"></div>
       <span id="sync-text">Listo</span>
     </div>
+    <button id="btn-sync-pending" onclick="sincronizarPendientes()" style="display:none;padding:5px 12px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);color:#fbbf24;border-radius:99px;font-family:Syne,sans-serif;font-size:0.7rem;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;">
+      ⟳ <span id="txt-pending">0</span> pendiente(s)
+    </button>
   </div>
 </div>
 
@@ -326,7 +353,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   <div class="card" id="card-productos">
     <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
       <span>Productos</span>
-      <button type="button" onclick="addProducto()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:8px;padding:4px 12px;font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;">+ Agregar</button>
+      <button type="button" onclick="addProducto()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:8px;padding:4px 12px;font-family:Syne,sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;">+ Agregar</button>
     </div>
     <div id="productos-list"></div>
   </div>
@@ -357,10 +384,42 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     ✓ Registrar Venta
   </button>
 
-  <!-- ÚLTIMAS VENTAS -->
+  <!-- VENTAS DEL TURNO -->
   <div class="card" id="card-ultimas" style="display:none;">
-    <div class="card-title">Últimas ventas del turno</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:0;">Mis ventas de hoy</div>
+      <div style="font-family:JetBrains Mono,monospace;font-size:0.7rem;color:var(--muted2);">
+        <span id="turno-count">0</span> venta(s) · <span style="color:var(--accent);">S/<span id="turno-total">0.00</span></span>
+      </div>
+    </div>
+    <!-- FILTRO RÁPIDO -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+      <button type="button" class="vf-tab active" onclick="setVentaFiltro('todo',this)">Todas</button>
+      <button type="button" class="vf-tab" onclick="setVentaFiltro('Efectivo',this)">💵 Efectivo</button>
+      <button type="button" class="vf-tab" onclick="setVentaFiltro('Yape',this)">📲 Yape</button>
+      <button type="button" class="vf-tab" onclick="setVentaFiltro('Tarjeta Débito',this)">💳 Débito</button>
+      <button type="button" class="vf-tab" onclick="setVentaFiltro('Tarjeta Crédito',this)">💳 Crédito</button>
+    </div>
     <div id="lista-ultimas"></div>
+  </div>
+
+  <!-- EXPORTAR VENTAS LOCALES -->
+  <div class="card" style="margin-top:0;">
+    <div class="card-title">Recuperar mis ventas</div>
+    <p style="font-size:0.78rem;color:var(--muted2);margin-bottom:14px;line-height:1.6;">
+      Descarga un CSV con todas las ventas guardadas en este dispositivo para enviarlo al dueño o sincronizarlo manualmente.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button type="button" class="btn btn-secondary" style="margin:0;font-size:0.78rem;" onclick="exportarVentasLocales('hoy')">
+        ⬇ Solo hoy
+      </button>
+      <button type="button" class="btn btn-secondary" style="margin:0;font-size:0.78rem;" onclick="exportarVentasLocales('todo')">
+        ⬇ Todo el historial
+      </button>
+    </div>
+    <button type="button" class="btn btn-wa" style="margin-top:8px;font-size:0.82rem;" onclick="reenviarTodasAlSheet()">
+      🔄 Reenviar todo al Sheet
+    </button>
   </div>
 
 </div>
@@ -371,16 +430,44 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwir_8b3mwA547UvidOEDo7AKicyhCHet8fjch7lb7VP1FQ9O8s20pbWimW3hVxzurS/exec';
 
 // ── ESTADO ────────────────────────────────────────────
-var ventasHoy = JSON.parse(localStorage.getItem('vhoy_'+getFecha()) || '[]');
+var ventasHoy = [];
 var pagoSel   = 'Efectivo';
 var prodCount = 0;
+
+// Normalizar ventas antiguas que no tienen campo productos
+function normalizarVentas(ventas) {
+  return ventas.map(function(v) {
+    if (!v.productos || !v.productos.length) {
+      // Reconstruir desde campos legacy
+      v.productos = [{
+        desc:     v.producto  || v.prod_desc || '(producto)',
+        qty:      v.cantidad  || v.qty       || 1,
+        price:    v.precio    || v.price     || 0,
+        total:    v.total     || 0,
+        punto:    false
+      }];
+    }
+    if (!v.comprobante) v.comprobante = v.boleta || 'NO';
+    if (!v.cliente)     v.cliente     = 'Cliente genérico';
+    if (!v.num)         v.num         = 0;
+    if (!v.hora)        v.hora        = '--:--';
+    return v;
+  });
+}
 
 // ── INIT ──────────────────────────────────────────────
 window.onload = function() {
   document.getElementById('seller-date').textContent = formatFecha();
+  // Cargar ventas del día normalizadas
+  ventasHoy = normalizarVentas(JSON.parse(localStorage.getItem('vhoy_'+getFecha()) || '[]'));
   actualizarContador();
   checkVendedor();
   addProducto(); // primera fila vacía
+  actualizarBtnPendientes();
+  if (ventasHoy.length > 0) {
+    document.getElementById('card-ultimas').style.display = 'block';
+    renderVentasTurno();
+  }
   document.getElementById('tipo-doc').addEventListener('change', function() {
     document.getElementById('doc-fields').style.display = this.value ? 'block' : 'none';
   });
@@ -527,17 +614,25 @@ function registrarVenta() {
   var totalVenta = prods.reduce(function(s,p){ return s+p.total; }, 0);
 
   // Guardar localmente (una entrada por venta completa)
-  var ventaLocal = { num: numVenta, fecha: fecha, hora: hora, seller: seller,
-    cliente: cliente, pago: pago, total: totalVenta, productos: prods };
+  var ventaLocal = {
+    num:         numVenta,
+    fecha:       fecha,
+    hora:        hora,
+    seller:      seller,
+    cliente:     cliente,
+    pago:        pago,
+    total:       totalVenta,
+    comprobante: boleta,
+    productos:   prods
+  };
   ventasHoy.push(ventaLocal);
   localStorage.setItem('vhoy_'+fecha, JSON.stringify(ventasHoy));
   actualizarContador();
   agregarUltimaVenta(ventaLocal);
 
-  // Enviar cada producto como línea separada al Sheet
-  setSyncStatus('sending', '⟳ Enviando...');
-  var promesas = prods.map(function(p, i) {
-    var payload = {
+  // Construir payloads
+  var payloads = prods.map(function(p, i) {
+    return {
       num:         numVenta,
       linea:       i + 1,
       fecha:       fecha,
@@ -556,24 +651,26 @@ function registrarVenta() {
       categoria:   p.punto ? 'Punto' : '',
       nota:        ''
     };
-    return fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
   });
 
-  Promise.all(promesas).then(function() {
-    setSyncStatus('ok', '✓ Sincronizado');
-    toast('✅ ' + prods.length + ' producto(s) registrado(s) · S/' + totalVenta.toFixed(2));
-  }).catch(function() {
-    setSyncStatus('err', '⚠ Sin conexión');
-    toast('⚠ Guardado local · Sin internet');
-  }).finally(function() {
+  // Enviar al Sheet
+  setSyncStatus('sending', '⟳ Enviando...');
+  enviarPayloads(payloads, function(ok) {
+    if (ok) {
+      setSyncStatus('ok', '✓ Sincronizado');
+      toast('✅ ' + prods.length + ' producto(s) · S/' + totalVenta.toFixed(2));
+    } else {
+      // Guardar en cola de pendientes y marcar venta como pendiente
+      ventaLocal.pendiente = true;
+      localStorage.setItem('vhoy_'+fecha, JSON.stringify(ventasHoy));
+      agregarACola(payloads);
+      setSyncStatus('err', '⚠ Sin conexión');
+      toast('⚠ Guardado local · Se enviará cuando haya conexión');
+    }
     btn.disabled = false;
     btn.textContent = '✓ Registrar Venta';
     limpiarForm();
+    actualizarBtnPendientes();
   });
 }
 
@@ -605,29 +702,94 @@ function actualizarContador() {
   document.getElementById('hoy-total').textContent = 'S/ ' + total.toFixed(2);
 }
 
-// ── ÚLTIMAS VENTAS ────────────────────────────────────
+// ── VENTAS DEL TURNO ─────────────────────────────────
+var ventaFiltroActual = 'todo';
+
 function agregarUltimaVenta(v) {
-  var card = document.getElementById('card-ultimas');
-  var lista = document.getElementById('lista-ultimas');
-  card.style.display = 'block';
+  document.getElementById('card-ultimas').style.display = 'block';
+  renderVentasTurno();
+}
+
+function setVentaFiltro(filtro, btn) {
+  ventaFiltroActual = filtro;
+  document.querySelectorAll('.vf-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderVentasTurno();
+}
+
+function renderVentasTurno() {
+  var vendedor = getVendedor();
+  var lista    = document.getElementById('lista-ultimas');
+
+  // Filtrar por vendedora actual y pago seleccionado
+  var ventas = ventasHoy.filter(function(v) {
+    if (ventaFiltroActual !== 'todo' && v.pago !== ventaFiltroActual) return false;
+    return true;
+  }).slice().reverse();
+
+  // Actualizar totales header
+  var totalTurno = ventasHoy.reduce(function(s,v){ return s+v.total; }, 0);
+  document.getElementById('turno-count').textContent = ventasHoy.length;
+  document.getElementById('turno-total').textContent = totalTurno.toFixed(2);
+
+  if (!ventas.length) {
+    lista.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.82rem;">Sin ventas con este filtro</div>';
+    return;
+  }
+
   var tagClass = {
     'Efectivo':'tag-ef','Yape':'tag-yp',
     'Tarjeta Débito':'tag-tj','Tarjeta Crédito':'tag-tj',
     'Transferencia':'tag-tr','QR / Billetera':'tag-tr'
-  }[v.pago] || 'tag-ef';
-  var div = document.createElement('div');
-  div.className = 'sale-item';
-  div.innerHTML =
-    '<div>' +
-      '<div class="sale-desc">' + v.producto + '</div>' +
-      '<div class="sale-meta">' + v.hora + ' · ' + v.cliente +
-        '<span class="tag ' + tagClass + '">' + v.pago + '</span>' +
+  };
+
+  lista.innerHTML = ventas.map(function(v, i) {
+    var tag    = tagClass[v.pago] || 'tag-ef';
+    var prods  = (v.productos || []).map(function(p){
+      return p.nombre || p.desc || '—';
+    }).join(', ');
+    var pending = v.pendiente ? '<span class="pending-dot" title="Pendiente de sincronizar"></span>' : '';
+    var detRows = (v.productos || []).map(function(p) {
+      var nombre = p.nombre || p.desc || '—';
+      var precio = p.price || 0;
+      var cant   = p.qty || p.cantidad || 1;
+      var sub    = p.total || (precio * cant);
+      return '<div class="det-row">' +
+        '<span class="det-prod">'+nombre+'</span>' +
+        '<span class="det-num">'+cant+' × S/'+parseFloat(precio).toFixed(2)+'</span>' +
+        '<span class="det-sub" style="margin-left:10px;">S/'+parseFloat(sub).toFixed(2)+'</span>' +
+      '</div>';
+    }).join('');
+
+    var detId = 'det-' + i;
+    return '<div class="venta-row" onclick="toggleDetalle(this)">' +
+      '<div class="venta-row-top">' +
+        '<div>' +
+          '<div class="venta-row-num">#'+String(v.num).padStart(4,'0')+' · '+v.hora+pending+'</div>' +
+          '<div class="venta-row-cliente">'+v.cliente+'</div>' +
+          '<div class="venta-row-productos">'+prods+'</div>' +
+        '</div>' +
+        '<div style="text-align:right;">' +
+          '<div class="venta-row-monto">S/'+v.total.toFixed(2)+'</div>' +
+          '<span class="tag '+tag+'">'+v.pago+'</span>' +
+        '</div>' +
       '</div>' +
-    '</div>' +
-    '<div class="sale-amount">S/' + v.total.toFixed(2) + '</div>';
-  lista.insertBefore(div, lista.firstChild);
-  // Máximo 5 en pantalla
-  while (lista.children.length > 5) lista.removeChild(lista.lastChild);
+      '<div class="venta-row-detalle" id="'+detId+'">' +
+        detRows +
+        '<div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:6px;border-top:1px solid var(--border);">' +
+          '<span style="font-size:.72rem;color:var(--muted2);">'+
+            (v.comprobante && v.comprobante !== 'NO' ? '🧾 '+v.comprobante : 'Sin comprobante')+
+          '</span>' +
+          '<span style="font-family:JetBrains Mono,monospace;font-size:.78rem;font-weight:700;color:var(--accent);">Total S/'+v.total.toFixed(2)+'</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleDetalle(row) {
+  var det = row.querySelector('.venta-row-detalle');
+  if (det) det.classList.toggle('open');
 }
 
 // ── SYNC STATUS ───────────────────────────────────────
@@ -664,6 +826,243 @@ function toast(msg) {
   el.classList.add('show');
   setTimeout(function(){ el.classList.remove('show'); }, 2800);
 }
+
+// ── EXPORTAR VENTAS LOCALES ──────────────────────────
+function getAllVentasLocales() {
+  // Recopilar todas las claves vhoy_ del localStorage
+  var todas = [];
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (key && key.startsWith('vhoy_')) {
+      var ventas = normalizarVentas(JSON.parse(localStorage.getItem(key) || '[]'));
+      todas = todas.concat(ventas);
+    }
+  }
+  // Ordenar por fecha y hora
+  todas.sort(function(a,b){
+    var fa = (a.fecha||'') + (a.hora||'');
+    var fb = (b.fecha||'') + (b.hora||'');
+    return fa > fb ? 1 : -1;
+  });
+  return todas;
+}
+
+function exportarVentasLocales(periodo) {
+  var todas = getAllVentasLocales();
+  if (periodo === 'hoy') {
+    var hoy = getFecha();
+    todas = todas.filter(function(v){ return v.fecha === hoy; });
+  }
+  if (!todas.length) { toast('⚠ Sin ventas para exportar'); return; }
+
+  var headers = ['N° Venta','Fecha','Hora','Vendedora','Cliente','Producto',
+                 'Cantidad','Precio Unit.','Subtotal','Total Venta',
+                 'Medio de Pago','Punto','Comprobante','Pendiente'];
+  var rows = [];
+  todas.forEach(function(v) {
+    (v.productos || []).forEach(function(p, i) {
+      rows.push([
+        v.num         || '',
+        v.fecha       || '',
+        v.hora        || '',
+        v.seller      || getVendedor(),
+        v.cliente     || '',
+        p.desc        || '',
+        p.qty         || p.cantidad || 1,
+        (p.price      || p.precio  || 0).toFixed ? parseFloat(p.price||p.precio||0).toFixed(2) : 0,
+        parseFloat(p.total||0).toFixed(2),
+        parseFloat(v.total||0).toFixed(2),
+        v.pago        || '',
+        p.punto       ? 'PUNTO' : '',
+        v.comprobante || 'NO',
+        v.pendiente   ? 'PENDIENTE' : 'ENVIADO'
+      ]);
+    });
+  });
+
+  var csv = [headers].concat(rows)
+    .map(function(r){ return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(','); })
+    .join('\n');
+
+  var fecha   = periodo === 'hoy' ? getFecha() : 'historial';
+  var vend    = getVendedor().replace(/\s+/g,'_');
+  var nombre  = 'ventas_'+vend+'_'+fecha+'.csv';
+  var blob    = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8;'});
+  var url     = URL.createObjectURL(blob);
+  var a       = document.createElement('a');
+  a.href = url; a.download = nombre;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  toast('✅ CSV descargado: '+nombre);
+}
+
+function reenviarTodasAlSheet() {
+  var todas = getAllVentasLocales();
+  if (!todas.length) { toast('⚠ Sin ventas en este dispositivo'); return; }
+
+  var btn = document.querySelector('.btn-wa');
+  btn.disabled = true;
+  btn.textContent = '⟳ Enviando...';
+  setSyncStatus('sending', '⟳ Reenviando...');
+
+  var payloads = [];
+  todas.forEach(function(v) {
+    (v.productos || []).forEach(function(p, i) {
+      payloads.push({
+        num:         v.num || 0,
+        linea:       i + 1,
+        fecha:       v.fecha || getFecha(),
+        hora:        v.hora  || getHora(),
+        seller:      v.seller || getVendedor(),
+        cliente:     v.cliente || 'Cliente genérico',
+        docId:       v.docId || '',
+        producto:    p.desc  || p.nombre || '',
+        cantidad:    p.qty   || p.cantidad || 1,
+        precio:      p.price || p.precio  || 0,
+        total:       p.total || 0,
+        total_venta: v.total || 0,
+        pago:        v.pago  || '',
+        punto:       p.punto ? 'PUNTO' : '',
+        boleta:      v.comprobante || 'NO',
+        nota:        ''
+      });
+    });
+  });
+
+  // Enviar en lotes de 5 para no saturar
+  var lotes  = [];
+  var tamLote = 5;
+  for (var i = 0; i < payloads.length; i += tamLote) {
+    lotes.push(payloads.slice(i, i + tamLote));
+  }
+
+  var idxLote = 0;
+  var errores = 0;
+
+  function enviarLote() {
+    if (idxLote >= lotes.length) {
+      btn.disabled = false;
+      btn.textContent = '🔄 Reenviar todo al Sheet';
+      if (errores === 0) {
+        setSyncStatus('ok', '✓ Todo reenviado');
+        toast('✅ '+payloads.length+' línea(s) enviadas al Sheet');
+        // Limpiar cola de pendientes
+        localStorage.removeItem('cola_pendientes');
+        actualizarBtnPendientes();
+      } else {
+        setSyncStatus('err', '⚠ Algunos fallaron');
+        toast('⚠ '+errores+' lote(s) fallaron · Intenta de nuevo');
+      }
+      return;
+    }
+    var lote = lotes[idxLote];
+    idxLote++;
+    var promesas = lote.map(function(p) {
+      return fetch(SHEETS_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: {'Content-Type':'application/json'},
+        body:    JSON.stringify(p)
+      });
+    });
+    Promise.all(promesas)
+      .then(function(){ enviarLote(); })
+      .catch(function(){ errores++; enviarLote(); });
+  }
+
+  enviarLote();
+}
+
+// ── COLA DE PENDIENTES ───────────────────────────────
+function getCola() {
+  return JSON.parse(localStorage.getItem('cola_pendientes') || '[]');
+}
+function guardarCola(cola) {
+  localStorage.setItem('cola_pendientes', JSON.stringify(cola));
+}
+function agregarACola(payloads) {
+  var cola = getCola();
+  // Guardar como grupo (una venta = varios payloads)
+  cola.push({ ts: Date.now(), payloads: payloads });
+  guardarCola(cola);
+}
+function actualizarBtnPendientes() {
+  var cola  = getCola();
+  var btn   = document.getElementById('btn-sync-pending');
+  var txt   = document.getElementById('txt-pending');
+  var total = cola.reduce(function(s,g){ return s + g.payloads.length; }, 0);
+  if (total > 0) {
+    btn.style.display = 'block';
+    txt.textContent   = total;
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function enviarPayloads(payloads, callback) {
+  var promesas = payloads.map(function(p) {
+    return fetch(SHEETS_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(p)
+    });
+  });
+  Promise.all(promesas)
+    .then(function()  { callback(true);  })
+    .catch(function() { callback(false); });
+}
+
+function sincronizarPendientes() {
+  var cola = getCola();
+  if (!cola.length) { toast('✅ Sin pendientes'); return; }
+
+  var btn = document.getElementById('btn-sync-pending');
+  btn.textContent = '⟳ Enviando...';
+  btn.disabled    = true;
+  setSyncStatus('sending', '⟳ Sincronizando...');
+
+  // Enviar grupo por grupo en secuencia
+  var idx = 0;
+  var errores = 0;
+  var colaRestante = [];
+
+  function enviarSiguiente() {
+    if (idx >= cola.length) {
+      // Terminó — guardar solo los que fallaron
+      guardarCola(colaRestante);
+      actualizarBtnPendientes();
+      btn.disabled = false;
+      if (errores === 0) {
+        setSyncStatus('ok', '✓ Todo sincronizado');
+        toast('✅ ' + (cola.length - colaRestante.length) + ' venta(s) sincronizada(s)');
+      } else {
+        setSyncStatus('err', '⚠ ' + errores + ' venta(s) sin enviar');
+        toast('⚠ ' + errores + ' venta(s) siguen pendientes · Intenta de nuevo');
+      }
+      return;
+    }
+    var grupo = cola[idx];
+    idx++;
+    enviarPayloads(grupo.payloads, function(ok) {
+      if (!ok) {
+        errores++;
+        colaRestante.push(grupo); // volver a encolar si falla
+      }
+      enviarSiguiente();
+    });
+  }
+  enviarSiguiente();
+}
+
+// Reintentar automáticamente cada 60 segundos si hay pendientes
+setInterval(function() {
+  var cola = getCola();
+  if (!cola.length) return;
+  if (!navigator.onLine) return;
+  sincronizarPendientes();
+}, 60000);
 
 // PWA install
 var deferredPrompt = null;
